@@ -1,103 +1,86 @@
-import Image from "next/image";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Box, Flex, Grid, IconButton, TextField } from "@radix-ui/themes";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const items = [
+        { id: 1, content: "Hello World" },
+        { id: 2, content: "Hello World" },
+    ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    // Função para determinar as classes do container e dos itens com base na contagem.
+    const getGridClasses = (count: number) => {
+        if (count <= 1) {
+            return {
+                container: "flex",
+                item: "h-full w-full",
+            };
+        }
+        if (count === 2) {
+            return {
+                container: "flex",
+                item: "h-full w-1/2",
+            };
+        }
+        if (count === 3 || count === 4) {
+            return {
+                container: "flex flex-wrap",
+                item: "h-1/2 w-1/2",
+            };
+        }
+        // Para um número maior de itens, calculamos a dimensão da grade mais próxima de um quadrado.
+        const gridDimension = Math.ceil(Math.sqrt(count));
+        let itemWidthClass = "";
+        let itemHeightClass = "";
+
+        // Mapeamento para classes do Tailwind.
+        switch (gridDimension) {
+            case 3: // Para 5 a 9 itens
+                itemWidthClass = "w-1/3";
+                itemHeightClass = "h-1/3";
+                break;
+            case 4: // Para 10 a 16 itens
+                itemWidthClass = "w-1/4";
+                itemHeightClass = "h-1/4";
+                break;
+            default: // Fallback para outros casos
+                itemWidthClass = "w-1/5";
+                itemHeightClass = "h-1/5";
+                break;
+        }
+
+        return {
+            container: "flex flex-wrap",
+            item: `${itemWidthClass} ${itemHeightClass}`,
+        };
+    };
+
+    const { container, item } = getGridClasses(items.length);
+    return (
+        <div className="h-full w-2/4 bg-green-400 flex flex-col justify-center items-center">
+            <div className={`${container} bg-yellow-500 w-full h-5/6`}>
+                {items.map((_item) => (
+                    <Box
+                        key={_item.id}
+                        height="full"
+                        className={`${item} bg-blue-500`}
+                    >
+                        <div className="flex justify-center items-center h-full w-full">
+                            {_item.content}
+                        </div>
+                    </Box>
+                ))}
+            </div>
+            <Flex maxWidth="600px" className="bg-black mt-4">
+                <TextField.Root
+                    placeholder="Search the docs…"
+                    size="2"
+                    className="w-128"
+                >
+                    <TextField.Slot>
+                        <MagnifyingGlassIcon height="16" width="16" />
+                    </TextField.Slot>
+                </TextField.Root>
+            </Flex>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
