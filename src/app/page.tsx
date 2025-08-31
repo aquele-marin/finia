@@ -1,12 +1,31 @@
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+"use client";
+
 import { Box, Flex, Grid, IconButton, TextField } from "@radix-ui/themes";
+import { useStream } from "@langchain/langgraph-sdk/react";
+import { LoadExternalComponent } from "@langchain/langgraph-sdk/react-ui";
 
 export default function Home() {
     const items = [
         { id: 1, content: "Hello World" },
         { id: 2, content: "Hello World" },
+        { id: 3, content: "Hello Wodadarld" },
+        { id: 4, content: "Hello dasdasdWorld" },
     ];
 
+    const thread = useStream({
+        apiUrl: "http://localhost:2024",
+        assistantId: "agent",
+    });
+
+    const { ui }: any = thread.values;
+
+    // To render components from react, pass this object to components props
+    // const clientComponents = {
+    //     stock: StockComponent,
+    // };
+
+    console.log("THREAD: ", thread);
+    console.log("UI: ", ui);
     // Função para determinar as classes do container e dos itens com base na contagem.
     const getGridClasses = (count: number) => {
         if (count <= 1) {
@@ -71,7 +90,37 @@ export default function Home() {
                 ))}
             </div>
             <Flex maxWidth="600px" className="bg-black mt-4">
-                <TextField.Root
+                {thread.messages.map((message: any) => (
+                    <div key={message.id} className="text-white">
+                        {message.content}
+                        {ui
+                            .filter(
+                                (ui: any) =>
+                                    ui.metadata?.message_id === message.id
+                            )
+                            .map((ui: any) => (
+                                <LoadExternalComponent
+                                    key={ui.id}
+                                    stream={thread}
+                                    message={ui}
+                                    namespace="agent"
+                                />
+                            ))}
+                    </div>
+                ))}
+                <button
+                    onClick={() => {
+                        const newMessage = {
+                            type: "human",
+                            content: `What's the stock for Apple?`,
+                        };
+
+                        thread.submit({ messages: [newMessage] });
+                    }}
+                >
+                    Submit something
+                </button>
+                {/* <TextField.Root
                     placeholder="Search the docs…"
                     size="2"
                     className="w-128"
@@ -79,7 +128,7 @@ export default function Home() {
                     <TextField.Slot>
                         <MagnifyingGlassIcon height="16" width="16" />
                     </TextField.Slot>
-                </TextField.Root>
+                </TextField.Root> */}
             </Flex>
         </div>
     );

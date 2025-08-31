@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.72",
+    "@langchain/langgraph-sdk": "^0.0.112",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/themes": "^3.2.1",
     "git-commit-msg-linter": "^5.0.8",
