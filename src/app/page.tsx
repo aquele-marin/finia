@@ -4,6 +4,7 @@ import { Box, Flex, Grid, IconButton, TextField } from "@radix-ui/themes";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { LoadExternalComponent } from "@langchain/langgraph-sdk/react-ui";
 import { Stock } from "@/ui";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 export default function Home() {
     const items = [
@@ -18,7 +19,7 @@ export default function Home() {
         assistantId: "agent",
     });
 
-    const { ui }: any = thread.values;
+    const ui: any = thread.values.ui ? thread.values.ui : [];
 
     // To render components from react, pass this object to components props
     const clientComponents: any = {
@@ -70,67 +71,45 @@ export default function Home() {
 
         return {
             container: "flex flex-wrap",
-            item: `${itemWidthClass} ${itemHeightClass}`,
+            // item: `${itemWidthClass} ${itemHeightClass}`,
+            gridDimension: gridDimension,
         };
     };
 
-    const { container, item } = getGridClasses(items.length);
+    const { container, gridDimension } = getGridClasses(ui.length);
     return (
         <div className="h-full w-2/4 bg-green-400 flex flex-col justify-center items-center">
             <div className={`${container} bg-yellow-500 w-full h-5/6`}>
-                {items.map((_item) => (
-                    <Box
-                        key={_item.id}
-                        height="full"
-                        className={`${item} bg-blue-500`}
-                    >
-                        <div className="flex justify-center items-center h-full w-full">
-                            {_item.content}
-                        </div>
-                    </Box>
+                {ui.map((ui: any) => (
+                    <LoadExternalComponent
+                        key={ui.id}
+                        stream={thread}
+                        message={ui}
+                        components={clientComponents}
+                        namespace="agent"
+                    />
                 ))}
             </div>
             <Flex maxWidth="600px" className="bg-black mt-4">
-                {thread.messages.map((message: any) => (
-                    <div key={message.id} className="text-white">
-                        {message.content}
-                        {ui
-                            .filter(
-                                (ui: any) =>
-                                    ui.metadata?.message_id === message.id
-                            )
-                            .map((ui: any) => (
-                                <LoadExternalComponent
-                                    key={ui.id}
-                                    stream={thread}
-                                    message={ui}
-                                    components={clientComponents}
-                                    namespace="agent"
-                                />
-                            ))}
-                    </div>
-                ))}
-                <button
-                    onClick={() => {
-                        const newMessage = {
-                            type: "human",
-                            content: `What's the stock for Apple?`,
-                        };
-
-                        thread.submit({ messages: [newMessage] });
-                    }}
-                >
-                    Submit something
-                </button>
-                {/* <TextField.Root
+                <TextField.Root
                     placeholder="Search the docs…"
                     size="2"
                     className="w-128"
+                    onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            const newMessage = {
+                                type: "human",
+                                content: event.currentTarget.value,
+                            };
+                            thread.submit({ messages: [newMessage] });
+                        }
+                    }}
                 >
                     <TextField.Slot>
                         <MagnifyingGlassIcon height="16" width="16" />
                     </TextField.Slot>
-                </TextField.Root> */}
+                </TextField.Root>
             </Flex>
         </div>
     );
