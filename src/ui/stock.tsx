@@ -1,7 +1,7 @@
-interface StockChartProps {
-    stocks: string[];
+interface StockProps {
+    symbol: string;
 }
 
-export const Stock = ({ stocks }: StockChartProps) => {
-    return <div className="bg-red-500">stocksss: {stocks}</div>;
+export const Stock = ({ symbol }: StockProps) => {
+    return <div className="bg-red-500">symbol: {symbol}</div>;
 };
