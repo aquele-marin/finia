@@ -3,6 +3,7 @@
 import { Box, Flex, Grid, IconButton, TextField } from "@radix-ui/themes";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { LoadExternalComponent } from "@langchain/langgraph-sdk/react-ui";
+import { Stock } from "@/ui";
 
 export default function Home() {
     const items = [
@@ -20,9 +21,9 @@ export default function Home() {
     const { ui }: any = thread.values;
 
     // To render components from react, pass this object to components props
-    // const clientComponents = {
-    //     stock: StockComponent,
-    // };
+    const clientComponents: any = {
+        stock: Stock,
+    };
 
     console.log("THREAD: ", thread);
     console.log("UI: ", ui);
@@ -103,6 +104,7 @@ export default function Home() {
                                     key={ui.id}
                                     stream={thread}
                                     message={ui}
+                                    components={clientComponents}
                                     namespace="agent"
                                 />
                             ))}
