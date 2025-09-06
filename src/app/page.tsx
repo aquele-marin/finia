@@ -1,21 +1,24 @@
 "use client";
 
-import { Box, Flex, Grid, IconButton, TextField } from "@radix-ui/themes";
+import {
+    Box,
+    Flex,
+    Grid,
+    IconButton,
+    Skeleton,
+    TextField,
+} from "@radix-ui/themes";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { LoadExternalComponent } from "@langchain/langgraph-sdk/react-ui";
 import { Stock } from "@/ui";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+
+const AI_API_URL = process.env.NEXT_PUBLIC_LANGGRAPH_URL;
 
 export default function Home() {
-    const items = [
-        { id: 1, content: "Hello World" },
-        { id: 2, content: "Hello World" },
-        { id: 3, content: "Hello Wodadarld" },
-        { id: 4, content: "Hello dasdasdWorld" },
-    ];
-
     const thread = useStream({
-        apiUrl: "http://localhost:2024",
+        apiUrl: AI_API_URL,
         assistantId: "agent",
     });
 
@@ -26,60 +29,9 @@ export default function Home() {
         stock: Stock,
     };
 
-    console.log("THREAD: ", thread);
-    console.log("UI: ", ui);
-    // Função para determinar as classes do container e dos itens com base na contagem.
-    const getGridClasses = (count: number) => {
-        if (count <= 1) {
-            return {
-                container: "flex",
-                item: "h-full w-full",
-            };
-        }
-        if (count === 2) {
-            return {
-                container: "flex",
-                item: "h-full w-1/2",
-            };
-        }
-        if (count === 3 || count === 4) {
-            return {
-                container: "flex flex-wrap",
-                item: "h-1/2 w-1/2",
-            };
-        }
-        // Para um número maior de itens, calculamos a dimensão da grade mais próxima de um quadrado.
-        const gridDimension = Math.ceil(Math.sqrt(count));
-        let itemWidthClass = "";
-        let itemHeightClass = "";
-
-        // Mapeamento para classes do Tailwind.
-        switch (gridDimension) {
-            case 3: // Para 5 a 9 itens
-                itemWidthClass = "w-1/3";
-                itemHeightClass = "h-1/3";
-                break;
-            case 4: // Para 10 a 16 itens
-                itemWidthClass = "w-1/4";
-                itemHeightClass = "h-1/4";
-                break;
-            default: // Fallback para outros casos
-                itemWidthClass = "w-1/5";
-                itemHeightClass = "h-1/5";
-                break;
-        }
-
-        return {
-            container: "flex flex-wrap",
-            // item: `${itemWidthClass} ${itemHeightClass}`,
-            gridDimension: gridDimension,
-        };
-    };
-
-    const { container, gridDimension } = getGridClasses(ui.length);
     return (
-        <div className="h-full w-2/4 bg-green-400 flex flex-col justify-center items-center">
-            <div className={`${container} bg-yellow-500 w-full h-5/6`}>
+        <div className="h-full w-2/4 flex flex-col justify-center items-center">
+            <div className={`flex flex-col w-full h-5/6 items-center`}>
                 {ui.map((ui: any) => (
                     <LoadExternalComponent
                         key={ui.id}
@@ -87,13 +39,29 @@ export default function Home() {
                         message={ui}
                         components={clientComponents}
                         namespace="agent"
+                        fallback={<div>Loading...</div>}
                     />
                 ))}
+                <Skeleton loading={thread.isLoading}>
+                    <div
+                        className={`w-128 h-64 ${
+                            thread.isLoading ? "" : "hidden"
+                        }`}
+                    >
+                        a
+                    </div>
+                </Skeleton>
             </div>
-            <Flex maxWidth="600px" className="bg-black mt-4">
+            <Flex maxWidth="600px" className="mt-4">
                 <TextField.Root
-                    placeholder="Search the docs…"
-                    size="2"
+                    placeholder={
+                        ui.length >= 3
+                            ? "Limit reached"
+                            : thread.isLoading
+                            ? "Loading..."
+                            : "Ask me anything about stocks..."
+                    }
+                    size="3"
                     className="w-128"
                     onKeyDown={(event) => {
                         if (event.key === "Enter") {
@@ -103,8 +71,13 @@ export default function Home() {
                                 content: event.currentTarget.value,
                             };
                             thread.submit({ messages: [newMessage] });
+
+                            event.currentTarget.value = "";
                         }
                     }}
+                    disabled={
+                        ui.length >= 3 ? true : thread.isLoading ? true : false
+                    }
                 >
                     <TextField.Slot>
                         <MagnifyingGlassIcon height="16" width="16" />

@@ -40,7 +40,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <Theme>
-                    <div className="h-screen w-screen bg-amber-500 flex items-center justify-center">
+                    <div className="h-screen w-screen flex items-center justify-center">
                         <Sidebar />
                         {children}
                     </div>
