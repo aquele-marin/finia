@@ -68,7 +68,7 @@ export function AIComponent({ content, id }: AIComponentProps) {
                         <Flex gap="3">
                             <Box flexGrow="1">
                                 <TextArea
-                                    placeholder="Write a comment…"
+                                    placeholder="Write a message…"
                                     style={{ height: 80 }}
                                     onChange={(e) => setMessage(e.target.value)}
                                 />
