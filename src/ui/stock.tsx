@@ -47,10 +47,10 @@ export const Stock = ({ stocks, symbol, message }: StockProps) => {
     const options = {
         responsive: true,
         plugins: {
-            title: {
-                display: true,
-                text: message,
-            },
+            // title: {
+            //     display: true,
+            //     text: message,
+            // },
         },
     };
 
