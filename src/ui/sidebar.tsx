@@ -1,4 +1,5 @@
 import { Separator } from "@radix-ui/themes";
+import Link from "next/link";
 
 export function Sidebar() {
     return (
@@ -6,18 +7,17 @@ export function Sidebar() {
             <h1 className="text-lg font-bold absolute top-0 left-0 ml-2 mt-2">
                 Finia Assistant
             </h1>
-            {/* <Separator orientation="vertical" size="4" /> */}
             <ul className="space-y-2 ">
                 <li>
-                    Chat
+                    <Link href="/">Chat</Link>
                     <Separator orientation="horizontal" size="3" />
                 </li>
                 <li>
-                    About me
+                    <Link href="/about">About Me</Link>
                     <Separator orientation="horizontal" size="3" />
                 </li>
                 <li>
-                    Docs
+                    <Link href="/docs">Docs</Link>
                     <Separator orientation="horizontal" size="3" />
                 </li>
             </ul>
