@@ -13,9 +13,9 @@ import {
     Tooltip as ToolTip,
     Skeleton,
 } from "@radix-ui/themes";
-import { Stock } from "./stock";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { useEffect, useState } from "react";
+import { Stock, StockScatterPlot } from ".";
 
 const AI_API_URL = process.env.NEXT_PUBLIC_LANGGRAPH_URL;
 
@@ -33,6 +33,7 @@ export function AIComponent({ content, id }: AIComponentProps) {
 
     const clientComponents: any = {
         stock: Stock,
+        stockScatterPlot: StockScatterPlot,
     };
 
     const ui: any = thread.values.ui ? thread.values.ui : [];
