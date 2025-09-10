@@ -136,9 +136,5 @@ export const StockScatterPlot: React.FC<ScatterStockProps> = ({
         },
     };
 
-    return (
-        <div className="relative h-96 w-full p-4 rounded-lg shadow-md">
-            <Scatter data={data} options={options} />
-        </div>
-    );
+    return <Scatter data={data} options={options} />;
 };

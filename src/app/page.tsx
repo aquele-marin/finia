@@ -1,13 +1,13 @@
 "use client";
 
-import { Flex, Skeleton, TextField } from "@radix-ui/themes";
-import { useStream } from "@langchain/langgraph-sdk/react";
-import { AIComponent, Stock } from "@/ui";
+import { Flex, Skeleton, TextField, Box } from "@radix-ui/themes";
+import { AIComponent } from "@/ui";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 export default function Home() {
     const [items, setItems] = useState<any[]>([]);
+    const CHART_LIMIT = 6;
 
     function handleSubmit(content: string) {
         const newItem = {
@@ -18,16 +18,17 @@ export default function Home() {
     }
 
     return (
-        <div className="h-full w-2/4 flex flex-col justify-center items-center">
-            <div className={`flex flex-col w-full h-5/6 items-center`}>
+        <div className="h-5/6 w-3/5 flex flex-col justify-between items-center overflow-hidden">
+            <div className="w-full flex flex-wrap gap-2">
                 {items.map((item: any) => (
                     <AIComponent key={item.id} {...item} />
                 ))}
             </div>
+
             <Flex maxWidth="600px" className="mt-4">
                 <TextField.Root
                     placeholder={
-                        items.length >= 3
+                        items.length >= CHART_LIMIT
                             ? "Limit reached"
                             : "Ask me anything about stocks..."
                     }
@@ -42,7 +43,7 @@ export default function Home() {
                             event.currentTarget.value = "";
                         }
                     }}
-                    disabled={items.length >= 3 ? true : false}
+                    disabled={items.length >= CHART_LIMIT ? true : false}
                 >
                     <TextField.Slot>
                         <MagnifyingGlassIcon height="16" width="16" />

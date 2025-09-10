@@ -46,6 +46,7 @@ export const Stock = ({ stocks, symbol, message }: StockProps) => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             // title: {
             //     display: true,
@@ -54,9 +55,5 @@ export const Stock = ({ stocks, symbol, message }: StockProps) => {
         },
     };
 
-    return (
-        <Box className="w-128">
-            <Line data={data} options={options} />
-        </Box>
-    );
+    return <Line data={data} options={options} />;
 };

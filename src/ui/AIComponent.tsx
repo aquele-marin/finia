@@ -52,10 +52,10 @@ export function AIComponent({ content, id }: AIComponentProps) {
 
     return thread.isLoading || ui.length == 0 ? (
         <Skeleton loading={thread.isLoading}>
-            <div className="w-128 h-64">a</div>
+            <div className="shadow-md w-128 h-64">a</div>
         </Skeleton>
     ) : (
-        <Card>
+        <Card className="shadow-md w-128 h-64">
             <Flex align="center" gap="2" mb="2">
                 <Popover.Root>
                     <ToolTip content="Query over this">
@@ -95,13 +95,15 @@ export function AIComponent({ content, id }: AIComponentProps) {
                     {ui[ui.length - 1].props.message}
                 </Box>
             </Flex>
-            <LoadExternalComponent
-                stream={thread}
-                message={ui[ui.length - 1]}
-                components={clientComponents}
-                namespace="agent"
-                fallback={<div>Loading...</div>}
-            />
+            <Flex className="h-48 w-full">
+                <LoadExternalComponent
+                    stream={thread}
+                    message={ui[ui.length - 1]}
+                    components={clientComponents}
+                    namespace="agent"
+                    fallback={<div>Loading...</div>}
+                />
+            </Flex>
         </Card>
     );
 }
